@@ -242,7 +242,7 @@
     const serverIp = manualIp || serverSelect;
 
     if (!serverIp || !playerId) {
-      resultDiv.innerHTML = `<p style="color:#ff4444; font-weight:700;">กรุณาเลือกหรือกรอก IP เซิร์ฟเวอร์ และกรอก Player ID ให้ถูกต้อง</p>`;
+      resultDiv.innerHTML = `<p style="color:#ff5555; font-weight:700;">กรุณาเลือกหรือกรอก IP เซิร์ฟเวอร์ และกรอก Player ID ให้ถูกต้อง</p>`;
       resultDiv.focus();
       return;
     }
@@ -268,11 +268,11 @@
           <p><strong>Discord:</strong> ${data.discord ?? 'ไม่พบข้อมูล'}</p>
         `;
       } else {
-        resultDiv.innerHTML = `<p style="color:#ff4444; font-weight:700;">❌ ไม่พบข้อมูลผู้เล่นในเซิร์ฟเวอร์นี้</p>`;
+        resultDiv.innerHTML = `<p style="color:#ff5555; font-weight:700;">❌ ไม่พบข้อมูลผู้เล่นในเซิร์ฟเวอร์นี้</p>`;
       }
       resultDiv.focus();
     } catch (error) {
-      resultDiv.innerHTML = `<p style="color:#ff4444; font-weight:700;">❌ เกิดข้อผิดพลาด: ไม่สามารถเชื่อมต่อ API ได้ (${error.message})</p>`;
+      resultDiv.innerHTML = `<p style="color:#ff5555; font-weight:700;">❌ เกิดข้อผิดพลาด: ไม่สามารถเชื่อมต่อ API ได้ (${error.message})</p>`;
       resultDiv.focus();
     }
   }
