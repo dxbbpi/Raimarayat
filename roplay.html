@@ -251,7 +251,7 @@
     resultDiv.innerHTML = `<p>กำลังค้นหาข้อมูลผู้เล่น ID <strong>${playerId}</strong> จากเซิร์ฟเวอร์ <strong>${serverIp}</strong>...</p>`;
 
     try {
-      const response = await fetch(`https://bothp.onrender.com/check-player?server=${serverIp}&player=${playerId}`);
+      const response = await fetch(`https://dekhudbad.online/fivem/check-player?server=${serverIp}&player=${playerId}`);
       const data = await response.json();
 
       if (data && data.name) {
