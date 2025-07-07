@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAIMARAYART VIP LOGIN</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://img5.pic.in.th/file/secure-sv1/3f1f2cd6811049b11991d94a6d096a7a.png" type="image/png" />
+  <style>
+    body {
+      background:
+        radial-gradient(circle at center, rgba(40, 0, 0, 0.95), rgba(10, 0, 0, 1)),
+        url('https://img5.pic.in.th/file/secure-sv1/imagebbd92c05488b0451.png') no-repeat center center / cover;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .glow-text {
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #ff1a1a;
+      text-shadow: 0 0 20px #ff3333, 0 0 30px #cc0000;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #990000, 0 0 20px #cc0000; }
+      to   { text-shadow: 0 0 30px #ff0000, 0 0 50px #ff3333; }
+    }
+
+    .form-container {
+      background: rgba(50, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+      box-shadow: 0 8px 20px rgba(200, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+    }
+
+    .input-field {
+      background-color: rgba(80, 0, 0, 0.5);
+      border: 2px solid #ff3333;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #fff;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .input-field:focus {
+      border-color: #ff6666;
+      box-shadow: 0 0 10px #ff4d4d;
+      outline: none;
+    }
+
+    .button {
+      background-color: #cc0000;
+      padding: 12px 30px;
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .button:hover {
+      background-color: #ff1a1a;
+      transform: scale(1.05);
+    }
+
+    .toggle-btn {
+      color: #ff9999;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .toggle-btn:hover {
+      color: #ff4d4d;
+    }
+
+    footer {
+      background: #330a0a;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #c88e8e;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="flex flex-col items-center justify-center grow p-6">
+    <h1 class="glow-text mb-6">RAIMARAYART VIP LOGIN</h1>
+
+    <!-- Login Form -->
+    <div id="loginForm" class="form-container">
+      <input id="usernameInput" type="text" placeholder="Username" class="input-field" />
+      <input id="passwordInput" type="password" placeholder="Password" class="input-field" />
+      <div class="flex justify-center">
+        <button onclick="checkLogin()" class="button">เข้าสู่ระบบ</button>
+      </div>
+      <p id="errorMessage" class="text-red-500 mt-2 hidden">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!</p>
+      <p class="toggle-btn" onclick="toggleForm('signup')">สมัครสมาชิก</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signupForm" class="form-container hidden mt-6">
+      <h2 class="text-2xl mb-4 text-pink-200">สมัครสมาชิก</h2>
+      <input id="signupUsernameInput" type="text" placeholder="Username" class="input-field" />
+      <input id="signupPasswordInput" type="password" placeholder="Password" class="input-field" />
+      <input id="signupConfirmPasswordInput" type="password" placeholder="ยืนยันรหัสผ่าน" class="input-field" />
+      <div class="flex justify-center">
+        <button onclick="checkSignup()" class="button">สมัครสมาชิก</button>
+      </div>
+      <p id="signupErrorMessage" class="text-red-500 mt-2 hidden">กรุณากรอกข้อมูลให้ครบถ้วนและตรงกัน</p>
+      <p class="toggle-btn" onclick="toggleForm('login')">กลับไปเข้าสู่ระบบ</p>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 FIVEM CHECK - DEV JUTI STORY
+  </footer>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/xxx/yyy"; // เปลี่ยน URL จริง
+
+    function toggleForm(form) {
+      document.getElementById('loginForm').classList.toggle('hidden', form !== 'login');
+      document.getElementById('signupForm').classList.toggle('hidden', form !== 'signup');
+    }
+
+    async function sendWebhookNotification(username, ipAddress) {
+      const message = { content: `ผู้ใช้ **${username}** ได้เข้าสู่ระบบจาก IP: **${ipAddress}**` };
+      try {
+        const response = await fetch(webhookURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(message)
+        });
+        if (!response.ok) console.error("แจ้งเตือนล้มเหลว:", response.status);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาด:", error);
+      }
+    }
+
+    function checkLogin() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
+      const storedPassword = localStorage.getItem(username);
+
+      if (storedPassword === password) {
+        alert("เข้าสู่ระบบสำเร็จ!");
+        fetch('https://api64.ipify.org?format=json')
+          .then(response => response.json())
+          .then(data => sendWebhookNotification(username, data.ip))
+          .finally(() => window.location.href = "menu.html");
+      } else {
+        document.getElementById("errorMessage").style.display = "block";
+      }
+    }
+
+    function checkSignup() {
+      const username = document.getElementById("signupUsernameInput").value.trim();
+      const password = document.getElementById("signupPasswordInput").value.trim();
+      const confirmPassword = document.getElementById("signupConfirmPasswordInput").value.trim();
+
+      if (username && password && password === confirmPassword) {
+        localStorage.setItem(username, password);
+        alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
+        toggleForm('login');
+      } else {
+        document.getElementById("signupErrorMessage").style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
