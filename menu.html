@@ -156,6 +156,40 @@
       font-size: 0.9rem;
       color: #c88e8e;
     }
+
+    /* ปุ่มเปิด-ปิดเพลง */
+    #musicToggleBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #bb2222;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 12px #bb2222;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      filter: drop-shadow(0 0 4px #bb2222);
+    }
+
+    #musicToggleBtn:hover {
+      background-color: #ff4444;
+      box-shadow: 0 0 20px #ff4444;
+    }
+
+    #musicToggleBtn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
   </style>
 </head>
 <body>
@@ -188,6 +222,15 @@
     &copy; 2025 FIVEM CHECK - DEV JUTI STORY
   </footer>
 
+  <!-- ปุ่มเปิด-ปิดเพลง -->
+  <button id="musicToggleBtn" aria-label="Toggle background music">
+    <svg id="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <!-- เริ่มต้นเป็นไอคอนเล่นเพลง -->
+      <path d="M8 5v14l11-7z"></path>
+    </svg>
+    เปิดเพลง
+  </button>
+
   <script>
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
@@ -196,7 +239,7 @@
       }
     });
 
-    // ระบบเล่นเพลงแนบเนียน (autoplay แบบ stealth)
+    // รายการเพลง
     let music_background_list = [
       {
         id: "bg1",
@@ -210,38 +253,78 @@
     audio_music_background.preload = 'auto';
     audio_music_background.src = music_background_list[0].url;
     audio_music_background.loop = false;
-    audio_music_background.volume = 0; // เล่นแบบเงียบก่อน
+    audio_music_background.volume = 0;
+    audio_music_background.muted = true;
 
-    // พอโหลดเสร็จ ลองเล่นทันทีแบบ muted
-    window.addEventListener('load', () => {
-      audio_music_background.muted = true;
-      audio_music_background.play().then(() => {
-        // ถ้าเล่นได้ ให้รอ user คลิก แล้ว unmute
-        document.addEventListener('click', () => {
-          audio_music_background.muted = false;
-          audio_music_background.volume = music_background_list[0].volume;
-        }, { once: true });
-      }).catch(err => {
-        console.log('เบราว์เซอร์บล็อกเสียง ต้องคลิกก่อนเล่น:', err);
+    let isPlaying = false;
+    let loopCount = 0;
+
+    // ฟังก์ชันเล่นเพลง
+    function playMusic() {
+      audio_music_background.muted = false;
+      audio_music_background.volume = music_background_list[0].volume;
+      audio_music_background.play().catch(err => {
+        console.log("เล่นเพลงไม่ได้:", err);
       });
-    });
+      isPlaying = true;
+      updateButton(true);
+    }
+
+    // ฟังก์ชันหยุดเพลง
+    function pauseMusic() {
+      audio_music_background.pause();
+      isPlaying = false;
+      updateButton(false);
+    }
+
+    // อัปเดตปุ่มตามสถานะเพลง
+    function updateButton(playing) {
+      const btn = document.getElementById('musicToggleBtn');
+      const icon = document.getElementById('icon');
+      if (playing) {
+        btn.textContent = ''; // ล้างข้อความเก่า
+        btn.appendChild(icon);
+        btn.insertAdjacentText('beforeend', ' ปิดเพลง');
+        // เปลี่ยนไอคอนเป็น "pause"
+        icon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
+      } else {
+        btn.textContent = ''; // ล้างข้อความเก่า
+        btn.appendChild(icon);
+        btn.insertAdjacentText('beforeend', ' เปิดเพลง');
+        // เปลี่ยนไอคอนเป็น "play"
+        icon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
+      }
+    }
 
     // วนเพลงตามจำนวน loop
-    let loopCount = 0;
     audio_music_background.addEventListener('ended', () => {
       loopCount++;
       if (loopCount < music_background_list[0].loop) {
         audio_music_background.currentTime = 0;
         audio_music_background.play();
+      } else {
+        pauseMusic();
       }
     });
 
     // ปิดเสียงเมื่อเปลี่ยนแท็บ
-    document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && isPlaying) {
         audio_music_background.volume = music_background_list[0].volume;
       } else {
         audio_music_background.volume = 0;
+      }
+    });
+
+    // เริ่มต้นปุ่มไม่เล่นเพลง
+    updateButton(false);
+
+    // ปุ่มกดเปิด-ปิดเพลง
+    document.getElementById('musicToggleBtn').addEventListener('click', () => {
+      if (isPlaying) {
+        pauseMusic();
+      } else {
+        playMusic();
       }
     });
   </script>
