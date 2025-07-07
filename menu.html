@@ -61,7 +61,6 @@
       padding: 0.5rem 1rem;
       border-radius: 6px;
       transition: background-color 0.3s ease, color 0.3s ease;
-      box-shadow: 0 0 0 transparent;
       user-select: none;
     }
 
@@ -106,7 +105,6 @@
       background: rgba(187, 34, 34, 0.15);
       border-radius: 18px;
       box-shadow: 0 8px 20px rgba(187, 34, 34, 0.3);
-      cursor: pointer;
       overflow: hidden;
       transition: transform 0.35s ease, box-shadow 0.35s ease;
       display: flex;
@@ -114,7 +112,6 @@
       align-items: center;
       user-select: none;
       border: 2px solid transparent;
-      width: 100%;
       max-width: 300px;
       margin: 0 auto;
     }
@@ -130,13 +127,7 @@
       height: 200px;
       object-fit: cover;
       border-radius: 18px 18px 0 0;
-      box-shadow: inset 0 0 40px rgba(187, 34, 34, 0.2);
-      transition: transform 0.3s ease;
       background-color: #330a0a;
-    }
-
-    .card:hover img {
-      transform: scale(1.05);
     }
 
     .card .description {
@@ -145,45 +136,17 @@
       font-size: 1rem;
       line-height: 1.4;
       color: #f0c6c6;
-      user-select: text;
     }
 
     .card .description a {
       color: #ff4444;
       font-weight: 700;
       text-decoration: none;
-      transition: color 0.3s ease;
     }
 
     .card .description a:hover {
       color: #ff7777;
       text-shadow: 0 0 6px #ff5555;
-    }
-
-    @media (max-width: 600px) {
-      main h1 {
-        font-size: 2.2rem;
-      }
-
-      nav {
-        gap: 1rem;
-      }
-
-      nav a {
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
-      }
-
-      .card img {
-        height: 150px;
-      }
-    }
-
-    #particles-js {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 0;
-      pointer-events: none;
     }
 
     footer {
@@ -192,19 +155,16 @@
       text-align: center;
       font-size: 0.9rem;
       color: #c88e8e;
-      user-select: none;
     }
   </style>
 </head>
 <body>
-  <div id="particles-js"></div>
-
   <header>
     <div class="logo">FIVEM CHECK</div>
     <nav>
       <a href="roplay.html">FIVEM ROPLAY</a>
       <a href="training.html">FIVEM TRAINING</a>
-      <a href="https://www.facebook.com/lakksjslal.ksksiksks" target="_blank" rel="noopener noreferrer">REPOST</a>
+      <a href="https://www.facebook.com/lakksjslal.ksksiksks" target="_blank">REPOST</a>
       <a href="index.html">EXIT</a>
     </nav>
   </header>
@@ -214,17 +174,17 @@
     <p class="subtitle">RAIMARAYART</p>
 
     <div class="card-container">
-      <div class="card" tabindex="0" aria-label="สนใจเข้ากระกูล ทักเพจ JUTI STORY x YONGBXY">
-        <img src="https://img2.pic.in.th/pic/2a95b086b2595426565c7d016ef128c0.png" alt="สนใจเข้ากระกูล ทักเพจ JUTI STORY x YONGBXY" />
+      <div class="card">
+        <img src="https://img2.pic.in.th/pic/2a95b086b2595426565c7d016ef128c0.png" alt="RAIMARAYART" />
         <div class="description">
           มีปัญหาสงสัยทักหาได้เลย<br />
-          <a href="https://www.facebook.com/normal.triples" target="_blank" rel="noopener noreferrer">RAIMARAYART</a>
+          <a href="https://www.facebook.com/normal.triples" target="_blank">RAIMARAYART</a>
         </div>
       </div>
     </div>
   </main>
 
-  <footer role="contentinfo">
+  <footer>
     &copy; 2025 FIVEM CHECK - DEV JUTI STORY
   </footer>
 
@@ -233,6 +193,55 @@
     document.addEventListener('keydown', e => {
       if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i')) {
         e.preventDefault();
+      }
+    });
+
+    // ระบบเล่นเพลงแนบเนียน (autoplay แบบ stealth)
+    let music_background_list = [
+      {
+        id: "bg1",
+        url: "https://audio.jukehost.co.uk/RPTqxfgnbK398bjryGRSZhJdtmXD7hfN",
+        loop: 999,
+        volume: 0.15
+      }
+    ];
+
+    const audio_music_background = new Audio();
+    audio_music_background.preload = 'auto';
+    audio_music_background.src = music_background_list[0].url;
+    audio_music_background.loop = false;
+    audio_music_background.volume = 0; // เล่นแบบเงียบก่อน
+
+    // พอโหลดเสร็จ ลองเล่นทันทีแบบ muted
+    window.addEventListener('load', () => {
+      audio_music_background.muted = true;
+      audio_music_background.play().then(() => {
+        // ถ้าเล่นได้ ให้รอ user คลิก แล้ว unmute
+        document.addEventListener('click', () => {
+          audio_music_background.muted = false;
+          audio_music_background.volume = music_background_list[0].volume;
+        }, { once: true });
+      }).catch(err => {
+        console.log('เบราว์เซอร์บล็อกเสียง ต้องคลิกก่อนเล่น:', err);
+      });
+    });
+
+    // วนเพลงตามจำนวน loop
+    let loopCount = 0;
+    audio_music_background.addEventListener('ended', () => {
+      loopCount++;
+      if (loopCount < music_background_list[0].loop) {
+        audio_music_background.currentTime = 0;
+        audio_music_background.play();
+      }
+    });
+
+    // ปิดเสียงเมื่อเปลี่ยนแท็บ
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        audio_music_background.volume = music_background_list[0].volume;
+      } else {
+        audio_music_background.volume = 0;
       }
     });
   </script>
