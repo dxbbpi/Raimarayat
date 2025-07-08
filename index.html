@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RAIMARAYART VIP LOGIN</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://img5.pic.in.th/file/secure-sv1/3f1f2cd6811049b11991d94a6d096a7a.png" type="image/png" />
@@ -81,6 +81,7 @@
       color: #ff9999;
       cursor: pointer;
       margin-top: 1rem;
+      text-align: center;
     }
 
     .toggle-btn:hover {
@@ -103,25 +104,25 @@
 
     <!-- Login Form -->
     <div id="loginForm" class="form-container">
-      <input id="usernameInput" type="text" placeholder="Username" class="input-field" />
-      <input id="passwordInput" type="password" placeholder="Password" class="input-field" />
+      <input id="usernameInput" type="text" placeholder="Username" class="input-field" autocomplete="username" />
+      <input id="passwordInput" type="password" placeholder="Password" class="input-field" autocomplete="current-password" />
       <div class="flex justify-center">
         <button onclick="checkLogin()" class="button">เข้าสู่ระบบ</button>
       </div>
-      <p id="errorMessage" class="text-red-500 mt-2 hidden">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!</p>
+      <p id="errorMessage" class="text-red-500 mt-2 hidden text-center">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!</p>
       <p class="toggle-btn" onclick="toggleForm('signup')">สมัครสมาชิก</p>
     </div>
 
     <!-- Signup Form -->
     <div id="signupForm" class="form-container hidden mt-6">
-      <h2 class="text-2xl mb-4 text-pink-200">สมัครสมาชิก</h2>
-      <input id="signupUsernameInput" type="text" placeholder="Username" class="input-field" />
-      <input id="signupPasswordInput" type="password" placeholder="Password" class="input-field" />
-      <input id="signupConfirmPasswordInput" type="password" placeholder="ยืนยันรหัสผ่าน" class="input-field" />
+      <h2 class="text-2xl mb-4 text-pink-200 text-center">สมัครสมาชิก</h2>
+      <input id="signupUsernameInput" type="text" placeholder="Username" class="input-field" autocomplete="username" />
+      <input id="signupPasswordInput" type="password" placeholder="Password" class="input-field" autocomplete="new-password" />
+      <input id="signupConfirmPasswordInput" type="password" placeholder="ยืนยันรหัสผ่าน" class="input-field" autocomplete="new-password" />
       <div class="flex justify-center">
         <button onclick="checkSignup()" class="button">สมัครสมาชิก</button>
       </div>
-      <p id="signupErrorMessage" class="text-red-500 mt-2 hidden">กรุณากรอกข้อมูลให้ครบถ้วนและตรงกัน</p>
+      <p id="signupErrorMessage" class="text-red-500 mt-2 hidden text-center">กรุณากรอกข้อมูลให้ครบถ้วนและตรงกัน</p>
       <p class="toggle-btn" onclick="toggleForm('login')">กลับไปเข้าสู่ระบบ</p>
     </div>
   </main>
@@ -137,6 +138,10 @@
     function toggleForm(form) {
       document.getElementById('loginForm').classList.toggle('hidden', form !== 'login');
       document.getElementById('signupForm').classList.toggle('hidden', form !== 'signup');
+
+      // ซ่อน error message ทุกครั้งที่สลับฟอร์ม
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('signupErrorMessage').style.display = 'none';
     }
 
     async function checkSignup() {
@@ -182,9 +187,11 @@
           localStorage.setItem("isLoggedIn", "true");
           localStorage.setItem("username", username);
 
+          // แจ้ง webhook
           const ip = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
           sendWebhookNotification(username, ip.ip);
 
+          // ไปหน้าเมนูหลังล็อกอิน
           window.location.href = "menu.html";
         } else {
           document.getElementById("errorMessage").style.display = "block";
