@@ -278,6 +278,11 @@
       resultDiv.focus();
     }
   }
+      window.onload = () => {
+      if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "index.html";
+      }
+    };
 </script>
 
 </body>
