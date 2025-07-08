@@ -51,6 +51,7 @@
     nav {
       display: flex;
       gap: 1.5rem;
+      align-items: center;
     }
 
     nav a {
@@ -68,6 +69,24 @@
       background-color: #bb2222;
       color: #fff0f0;
       box-shadow: 0 0 12px #bb2222;
+    }
+
+    nav a.logout-btn {
+      color: #ff6666;
+      font-weight: 700;
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+
+    nav a.logout-btn:hover {
+      background-color: #ff4444;
+      color: #fff;
+      box-shadow: 0 0 12px #ff4444;
     }
 
     main {
@@ -200,6 +219,7 @@
       <a href="training.html">FIVEM TRAINING</a>
       <a href="https://www.facebook.com/lakksjslal.ksksiksks" target="_blank">REPOST</a>
       <a href="index.html">EXIT</a>
+      <a href="#" class="logout-btn" onclick="logout()">LOGOUT</a>
     </nav>
   </header>
 
@@ -327,11 +347,20 @@
         playMusic();
       }
     });
-        window.onload = () => {
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "index.html"; // เด้งกลับถ้าไม่ได้ login
+
+    // เช็คสถานะล็อกอิน ถ้าไม่ใช่รีไดเรคไปหน้า login
+    window.onload = () => {
+      if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "index.html";
+      }
+    };
+
+    // ฟังก์ชันออกจากระบบ
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("username");
+      window.location.href = "index.html";
     }
-  };
   </script>
 </body>
 </html>
