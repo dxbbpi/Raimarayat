@@ -131,54 +131,82 @@
   </footer>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1391770609008250911/_QffPDQwt6wcuH2ULhSJdPTmjF6NNqGt6bOxgbjkzq3xPclBKaioGYuMlv4HOtYR0IyC"; // เปลี่ยน URL จริง
+    const backendURL = "https://raimarayat.onrender.com";
+    const webhookURL = "https://discord.com/api/webhooks/1391770609008250911/_QffPDQwt6wcuH2ULhSJdPTmjF6NNqGt6bOxgbjkzq3xPclBKaioGYuMlv4HOtYR0IyC"; // เปลี่ยนเป็นของจริง
 
     function toggleForm(form) {
       document.getElementById('loginForm').classList.toggle('hidden', form !== 'login');
       document.getElementById('signupForm').classList.toggle('hidden', form !== 'signup');
     }
 
-    async function sendWebhookNotification(username, ipAddress) {
-      const message = { content: `ผู้ใช้ **${username}** ได้เข้าสู่ระบบจาก IP: **${ipAddress}**` };
-      try {
-        const response = await fetch(webhookURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(message)
-        });
-        if (!response.ok) console.error("แจ้งเตือนล้มเหลว:", response.status);
-      } catch (error) {
-        console.error("เกิดข้อผิดพลาด:", error);
-      }
-    }
-
-    function checkLogin() {
-      const username = document.getElementById("usernameInput").value.trim();
-      const password = document.getElementById("passwordInput").value.trim();
-      const storedPassword = localStorage.getItem(username);
-
-      if (storedPassword === password) {
-        alert("เข้าสู่ระบบสำเร็จ!");
-        fetch('https://api64.ipify.org?format=json')
-          .then(response => response.json())
-          .then(data => sendWebhookNotification(username, data.ip))
-          .finally(() => window.location.href = "menu.html");
-      } else {
-        document.getElementById("errorMessage").style.display = "block";
-      }
-    }
-
-    function checkSignup() {
+    async function checkSignup() {
       const username = document.getElementById("signupUsernameInput").value.trim();
       const password = document.getElementById("signupPasswordInput").value.trim();
       const confirmPassword = document.getElementById("signupConfirmPasswordInput").value.trim();
 
       if (username && password && password === confirmPassword) {
-        localStorage.setItem(username, password);
-        alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
-        toggleForm('login');
+        try {
+          const res = await fetch(`${backendURL}/api/signup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
+
+          if (res.ok) {
+            alert("สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ");
+            toggleForm('login');
+          } else {
+            const error = await res.json();
+            alert("สมัครไม่สำเร็จ: " + error.error);
+          }
+        } catch (err) {
+          alert("เกิดข้อผิดพลาด: " + err.message);
+        }
       } else {
         document.getElementById("signupErrorMessage").style.display = "block";
+      }
+    }
+
+    async function checkLogin() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
+
+      try {
+        const res = await fetch(`${backendURL}/api/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (res.ok) {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("username", username);
+
+          const ip = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
+          sendWebhookNotification(username, ip.ip);
+
+          window.location.href = "menu.html";
+        } else {
+          document.getElementById("errorMessage").style.display = "block";
+        }
+      } catch (err) {
+        alert("เชื่อมต่อ backend ไม่ได้");
+      }
+    }
+
+    async function sendWebhookNotification(username, ipAddress) {
+      const message = {
+        content: `🛡️ ผู้ใช้ **${username}** เข้าระบบจาก IP: **${ipAddress}**`
+      };
+
+      try {
+        await fetch(webhookURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(message)
+        });
+      } catch (error) {
+        console.error("Webhook error:", error);
       }
     }
   </script>
