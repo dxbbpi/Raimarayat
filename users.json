@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "username": "p",
+    "password": "p",
+    "code": "BB1_995"
+  },
+  {
+    "username": "user2",
+    "password": "pass2",
+    "code": "BB2_8741"
+  }
+]
+
