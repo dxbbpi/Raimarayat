@@ -1,37 +1,22 @@
 [
-  {
-    "username": "p",
-    "password": "p",
-    "code": "BB1_995"
-  },
-  {
-    "username": "Win",
-    "password": "01020928",
-    "code": "BB2_8741"
-  }
+  { "username": "p", "password": "p", "code": "BB1_1001" },
+  { "username": "user2", "password": "pass2", "code": "BB1_1002" },
+  { "username": "user3", "password": "pass3", "code": "BB1_1003" },
+  { "username": "user4", "password": "pass4", "code": "BB1_1004" },
+  { "username": "user5", "password": "pass5", "code": "BB1_1005" },
+  { "username": "user6", "password": "pass6", "code": "BB1_1006" },
+  { "username": "user7", "password": "pass7", "code": "BB1_1007" },
+  { "username": "user8", "password": "pass8", "code": "BB1_1008" },
+  { "username": "user9", "password": "pass9", "code": "BB1_1009" },
+  { "username": "user10", "password": "pass10", "code": "BB1_1010" },
+  { "username": "user11", "password": "pass11", "code": "BB1_1011" },
+  { "username": "user12", "password": "pass12", "code": "BB1_1012" },
+  { "username": "user13", "password": "pass13", "code": "BB1_1013" },
+  { "username": "user14", "password": "pass14", "code": "BB1_1014" },
+  { "username": "user15", "password": "pass15", "code": "BB1_1015" },
+  { "username": "user16", "password": "pass16", "code": "BB1_1016" },
+  { "username": "user17", "password": "pass17", "code": "BB1_1017" },
+  { "username": "user18", "password": "pass18", "code": "BB1_1018" },
+  { "username": "user19", "password": "pass19", "code": "BB1_1019" },
+  { "username": "user20", "password": "pass20", "code": "BB1_1020" }
 ]
-[
-  {
-    "username": "1",
-    "password": "1",
-    "code": "BB1_996"
-  },
-  {
-    "username": "2",
-    "password": "2",
-    "code": "BB2_8742"
-  }
-]
-[
-  {
-    "username": "3",
-    "password": "3",
-    "code": "BB1_997"
-  },
-  {
-    "username": "4",
-    "password": "4",
-    "code": "BB2_8743"
-  }
-]
-
